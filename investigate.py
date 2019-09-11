@@ -68,7 +68,20 @@ def assess_data(df):
     df['Hipertension'].value_counts()
     # Two categories: 0(No) or 1(Yes)
 
+def clean_data(df):
+    # Now we'll drop the columns that are not required
+    df.drop(columns=['PatientId', 'ScheduledDay', 'AppointmentDay', 'Handcap'], inplace=True)
+
+    # Rename columns for convenience
+    df.rename(columns={'AppointmentID': 'appointment_id', 'Age': 'age', 'Gender': 'gender',
+    'Neighbourhood': 'neighbourhood', 'Scholarship': 'scholarship', 'Hipertension': 'hypertension',
+    'Diabetes': 'diabetes', 'Alcoholism': 'alcoholism', 'SMS_received': 'sms_received',
+    'No-show': 'no_show'}, inplace=True)
+
+    return df
+
 
 def main():
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
+    clean_data(df)
