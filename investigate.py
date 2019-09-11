@@ -5,3 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+#Loading the csv file into a Pandas DataFrame
+
+df = pd.read_csv('noshowappointments-kagglev2-may-2016.csv')
