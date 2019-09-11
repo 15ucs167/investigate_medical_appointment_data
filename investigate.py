@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #Loading the csv file into a Pandas DataFrame
-
-df = pd.read_csv('noshowappointments-kagglev2-may-2016.csv')
+def load_data(str):
+    df = pd.read_csv(str)
+    return df
 
 #Assessing the data
-def assess_data():
+def assess_data(df):
 
     df.head()
     df.info()
@@ -69,4 +70,5 @@ def assess_data():
 
 
 def main():
-    assess_data()
+    df = load_data('noshowappointments-kagglev2-may-2016.csv')
+    assess_data(df)
