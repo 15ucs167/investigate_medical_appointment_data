@@ -80,8 +80,66 @@ def clean_data(df):
 
     return df
 
+def explore_data(df):
+
+    # First, let's look at how gender relates to no-shows
+
+    df['gender'].value_counts()
+
+    """Above are the total counts of both genders. We create two DataFrames below, one where the
+     patients didn't show up and one where they did show up"""
+
+    df_no_show = df.query('no_show == "Yes"')
+    df_show = df.query('no_show == "No"')
+
+    # Let's store the counts of both genders in Pandas Series
+
+    total_count_genders = df['gender'].value_counts()
+    total_count_genders
+
+    # Now, let's see gender counts for df_no_show and df_show
+
+    no_show_gender_counts = df_no_show['gender'].value_counts()
+    no_show_gender_counts
+
+    show_gender_counts = df_show['gender'].value_counts()
+    show_gender_counts
+
+    # To make a uniform comparison between the genders, let's calculate the proportions of gender counts for shows and no-shows
+
+    no_show_gender_proportions = no_show_gender_counts/total_count_genders
+    no_show_gender_proportions
+
+    show_gender_proportions = show_gender_counts/total_count_genders
+    show_gender_proportions
+
+    # We observe that the proportions of genders showing up and not showing up are almost similar
+
+    # Let's plot our findings
+
+    sns.set_style('darkgrid')
+    ind = np.arange(len(show_gender_proportions))
+    width = 0.35
+
+    male_bar = plt.bar(ind, [show_gender_proportions['M'], no_show_gender_proportions['M']], width,
+    color='r', alpha=0.7, label='Male')
+    female_bar = plt.bar(ind+width, [show_gender_proportions['F'], no_show_gender_proportions['F']], width,
+    color='b', alpha=0.7, label='Female')
+    plt.title('APPOINTMENT FULFILMENT BY GENDER')
+    plt.xlabel('WHETHER PATIENT SHOWED UP OR NOT')
+    plt.ylabel('PROPORTION OF PEOPLE')
+    locations = ind+width/2
+    labels = ['Showed Up', 'No-showed']
+    plt.xticks(locations, labels)
+    plt.legend();
+    plt.show()
+    print(plt)
+
+    # Thus, we can clearly see that about 80% of the people of both genders showed-up for their appointments
+    # whereas about 20% didn't
 
 def main():
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
     clean_data(df)
+    explore_data(df)
