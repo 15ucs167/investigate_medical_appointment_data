@@ -138,7 +138,7 @@ def explore_data(df):
     # Thus, we can clearly see that about 80% of the people of both genders showed-up for their appointments
     # whereas about 20% didn't
 
-def main():
+if __name__ == '__main__':
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
     clean_data(df)
