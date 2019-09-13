@@ -84,7 +84,9 @@ def explore_gender(df):
 
     # First, let's look at how gender relates to no-shows
 
-    df['gender'].value_counts()
+    df['gender'].value_counts().plot(kind='pie')
+
+    # No. of females is significantly higher than females
 
     """Above are the total counts of both genders. We create two DataFrames below, one where the
      patients didn't show up and one where they did show up"""
@@ -209,7 +211,9 @@ def explore_age_groups(df):
     no_show_counts_by_age_group
 
     total_appointments_by_age_groups = df.groupby('age_group')['appointment_id'].count()
-    total_appointments_by_age_groups
+    total_appointments_by_age_groups.plot('kind=pie')
+
+    # Looks like appointments are evenly distributed among the age groups
 
     # Let's try to get the proportions of no-shows for all age-groups
 
