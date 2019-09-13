@@ -80,7 +80,7 @@ def clean_data(df):
 
     return df
 
-def explore_data(df):
+def explore_gender(df):
 
     # First, let's look at how gender relates to no-shows
 
@@ -138,8 +138,47 @@ def explore_data(df):
     # Thus, we can clearly see that about 80% of the people of both genders showed-up for their appointments
     # whereas about 20% didn't
 
+def explore_neighbourhoods(df):
+
+    df_no_show = df.query('no_show == "Yes"')
+    df_show = df.query('no_show == "No"')
+    
+    # Now, let's see which are the neighbourhoods with the most no-shows
+
+    no_show_neighbourhoods_patient_count = df_no_show['neighbourhood'].value_counts()
+    no_show_neighbourhoods_patient_count
+
+    # We observe that there are 80 neighbourhoods in our DataFrame.
+
+    # Let's try and get the proportion of no-shows relative to the original neighbourhood counts
+
+    patients_by_neighbourhood = df['neighbourhood'].value_counts()
+    neighbourhood_proportions = no_show_neighbourhoods_patient_count/patients_by_neighbourhood
+
+    # Let's try to get the top 5 neighbourhoods with the most no-show proportions
+
+    neighbourhood_proportions.sort_values(ascending=False, inplace=True)
+
+    top_no_show_neighbourhoods = neighbourhood_proportions.head(5)
+    top_no_show_neighbourhoods
+
+    # Let's plot these
+
+    width = 0.35
+    plt.bar(1, top_no_show_neighbourhoods[0], width, color='r', alpha=0.7, label=top_no_show_neighbourhoods.index[0].title())
+    plt.bar(2, top_no_show_neighbourhoods[1], width, color='y', alpha=0.7, label=top_no_show_neighbourhoods.index[1].title())
+    plt.bar(3, top_no_show_neighbourhoods[2], width, color='g', alpha=0.7, label=top_no_show_neighbourhoods.index[2].title())
+    plt.bar(4, top_no_show_neighbourhoods[3], width, color='b', alpha=0.7, label=top_no_show_neighbourhoods.index[3].title())
+    plt.bar(5, top_no_show_neighbourhoods[4], width, color='magenta', alpha=0.7, label=top_no_show_neighbourhoods.index[4].title())
+    plt.title('NEIGHBOURHOODS WITH HIGHEST PROPORTIONS OF NO_SHOWS')
+    plt.xlabel('NEIGHBOURHOODS')
+    plt.ylabel('PROPORTIONS OF NO-SHOWS')
+    plt.legend();
+    plt.show()
+
 if __name__ == '__main__':
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
     clean_data(df)
-    explore_data(df)
+    explore_gender(df)
+    explore_neighbourhoods(df)
