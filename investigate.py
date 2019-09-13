@@ -41,6 +41,7 @@ def assess_data(df):
 
     df['Gender'].value_counts()
     # Two gender types: F and M
+    # No. of females is significantly higher than males
 
     df['Neighbourhood'].value_counts()
 
@@ -84,7 +85,10 @@ def explore_gender(df):
 
     # First, let's look at how gender relates to no-shows
 
-    df['gender'].value_counts().plot(kind='pie')
+
+    plt.pie(df['gender'].value_counts(), labels=['F', 'M'], autopct='%1.1f%%')
+    plt.title('DISTRIBUTION OF APPOINTMENTS BY GENDER')
+    plt.show()
 
     # No. of females is significantly higher than females
 
@@ -211,8 +215,10 @@ def explore_age_groups(df):
     no_show_counts_by_age_group
 
     total_appointments_by_age_groups = df.groupby('age_group')['appointment_id'].count()
-    total_appointments_by_age_groups.plot('kind=pie')
-
+    total_appointments_by_age_groups
+    plt.pie(total_appointments_by_age_groups, labels=bin_names, autopct='%1.1f%%')
+    plt.title('DISTRIBUTION OF APPOINTMENTS BY AGE GROUPS')
+    plt.show()
     # Looks like appointments are evenly distributed among the age groups
 
     # Let's try to get the proportions of no-shows for all age-groups
