@@ -142,7 +142,7 @@ def explore_neighbourhoods(df):
 
     df_no_show = df.query('no_show == "Yes"')
     df_show = df.query('no_show == "No"')
-    
+
     # Now, let's see which are the neighbourhoods with the most no-shows
 
     no_show_neighbourhoods_patient_count = df_no_show['neighbourhood'].value_counts()
@@ -176,9 +176,76 @@ def explore_neighbourhoods(df):
     plt.legend();
     plt.show()
 
+def explore_age_groups(df):
+    # Let's try and see no-shows by age groups
+
+    df['age'].describe()
+
+    df[df['age'] == df['age'].min()]
+
+    # We see that the minimum age in the database is -1, which is ambiguous. Hence, we'll remove that row from the database
+
+    df.drop(99832, inplace=True)
+
+    df['age'].describe()
+
+    """Now, let's use Pandas' cut function to distribute ages into groups. We'll create groups using the
+    values obtained from describe(), i.e., the 5 number summary"""
+
+    bin_edges = [0, 18.00, 37.00, 55.00, 115.00]
+    bin_names = ['Children', 'Young Adults', 'Middle-Aged', 'Seniors']
+
+    # We now create a new column for age-group in the DataFrame
+
+    df['age_group'] = pd.cut(df['age'], bin_edges, labels=bin_names)
+
+    # Let's check our DataFrame
+
+    df.head()
+
+    # Let us group the DataFrame by these age-groups and try to see no-shows according to age-groups
+
+    no_show_counts_by_age_group = df.groupby(['age_group', 'no_show'])['appointment_id'].count()
+    no_show_counts_by_age_group
+
+    total_appointments_by_age_groups = df.groupby('age_group')['appointment_id'].count()
+    total_appointments_by_age_groups
+
+    # Let's try to get the proportions of no-shows for all age-groups
+
+    children_proportions = no_show_counts_by_age_group['Children']/total_appointments_by_age_groups['Children']
+    children_proportions
+
+    adult_proportions = no_show_counts_by_age_group['Young Adults']/total_appointments_by_age_groups['Young Adults']
+    adult_proportions
+
+    middle_proportions = no_show_counts_by_age_group['Middle-Aged']/total_appointments_by_age_groups['Middle-Aged']
+    middle_proportions
+
+    senior_proportions = no_show_counts_by_age_group['Seniors']/total_appointments_by_age_groups['Seniors']
+    senior_proportions
+
+    # Now, let us plot these values
+
+    ind = np.arange(len(children_proportions))
+    width=0.2
+    child_bars = plt.bar(ind, children_proportions, width, color='c', alpha=0.7, label='Children')
+    adult_bars = plt.bar(ind+width, adult_proportions, width, color='g', alpha=0.7, label='Young Adults')
+    middle_bars = plt.bar(ind+width*2, middle_proportions, width, color='m', alpha=0.7, label='Middle-Aged')
+    senior_bars = plt.bar(ind+width*3, senior_proportions, width, color='y', alpha=0.7, label='Seniors')
+    plt.ylabel('PROPORTIONS')
+    plt.xlabel('APPOINTMENT FUlFILLMENT')
+    plt.title('PROPORTIONS OF APPOINTMENT FULFILMENTS BY AGE GROUPS')
+    locations = ind+ 1.5*width
+    labels = ['Showed-Up', 'No-Shows']
+    plt.xticks(locations, labels)
+    plt.legend();
+    plt.show()
+
 if __name__ == '__main__':
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
     clean_data(df)
     explore_gender(df)
     explore_neighbourhoods(df)
+    explore_age_groups(df)
