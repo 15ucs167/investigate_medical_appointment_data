@@ -1,4 +1,10 @@
-#In this project, I'm investigating a dataset that contains 100,000 records of medical appointments in Brazil.
+"""In this project, I'm investigating a dataset that contains around 100,000 records of medical appointments in Brazil. The dataset has 'No-show' as the dependent variable which tells whether a patient fulfilled his/her appointment or not.
+
+I'm interested in exploring:
+Q1. How do the different genders fair when it comes to fulfilling appointments?
+Q2. Which neighbourhoods have the highest no-show proportions?
+Q3. How do different age groups perform in fulfilling medical appointments?"""
+
 
 #Importing the packages required for analysis
 import numpy as np
@@ -17,27 +23,9 @@ def assess_data(df):
     df.head()
     df.info()
 
-    # We have 110527 rows and 14 columns.
-
-    # We see that there are no null values in the dataset and hence we don't need to handle any missing data
-
-    """We see that No-show is our independent variable. We can investigate how the gender of a person relates to him/her
-    showing up for an appointment. In addition to gender, we can similarly investigate how the age,
-    neighbourhood, and various conditions like diabetes can indicate a person fulfilling his/her appointment."""
-
-    # We can also explore whether a person receiving a government scholarship has anything to do with no-shows
-
-    # We can see if no-shows by persons receiving SMSes are lower than those who didn't get any messages
-
-    # The PatientId is quite ambiguous and irrelevant for our investigation and hence can be dropped.
-
-    # ScheduledDay and AppointmentDay are not needed for the present investigation and hence can be dropped.
-
     # Check for duplicate rows
 
     sum(df.duplicated())
-
-    # So, there are no duplicate rows in our dataset
 
     df['Gender'].value_counts()
     # Two gender types: F and M
@@ -70,18 +58,38 @@ def assess_data(df):
     # Two categories: 0(No) or 1(Yes)
 
 def clean_data(df):
+
+    # We have 110527 rows and 14 columns.
+
+    # We see that there are no null values in the dataset and hence we don't need to handle any missing data
+
+    # There are no duplicate rows in our dataset
+
+    """We see that No-show is our independent variable. We can investigate how the gender of a person relates to him/her
+    showing up for an appointment. In addition to gender, we can similarly investigate how the age and
+    neighbourhood indicate a person fulfilling his/her appointment."""
+
+    # The PatientId is quite ambiguous and irrelevant for our investigation and hence can be dropped.
+
+    # ScheduledDay and AppointmentDay are not needed for the present investigation and hence can be dropped.
+
+    # The Handcap column is ambiguous as we don't have details about the categories. Hence, we'll drop it
+
+    # For our present investigation, Scholarship, Hipertension, Diabetes, Alcoholism, SMS_received are not required
+
     # Now we'll drop the columns that are not required
-    df.drop(columns=['PatientId', 'ScheduledDay', 'AppointmentDay', 'Handcap'], inplace=True)
+    df.drop(columns=['PatientId', 'ScheduledDay', 'AppointmentDay', 'Scholarship', 'Hipertension',
+    'Diabetes', 'Alcoholism', 'Handcap', 'SMS_received'], inplace=True)
 
     # Rename columns for convenience
     df.rename(columns={'AppointmentID': 'appointment_id', 'Age': 'age', 'Gender': 'gender',
-    'Neighbourhood': 'neighbourhood', 'Scholarship': 'scholarship', 'Hipertension': 'hypertension',
-    'Diabetes': 'diabetes', 'Alcoholism': 'alcoholism', 'SMS_received': 'sms_received',
-    'No-show': 'no_show'}, inplace=True)
+    'Neighbourhood': 'neighbourhood', 'No-show': 'no_show'}, inplace=True)
 
     return df
 
 def explore_gender(df):
+
+    # Q1. How do the different genders fair when it comes to fulfilling appointments?
 
     # First, let's look at how gender relates to no-shows
 
@@ -90,7 +98,7 @@ def explore_gender(df):
     plt.title('DISTRIBUTION OF APPOINTMENTS BY GENDER')
     plt.show()
 
-    # No. of females is significantly higher than females
+    # No. of females is significantly higher than males
 
     """Above are the total counts of both genders. We create two DataFrames below, one where the
      patients didn't show up and one where they did show up"""
@@ -146,6 +154,8 @@ def explore_gender(df):
 
 def explore_neighbourhoods(df):
 
+    # Q2. Which neighbourhoods have the highest no-show proportions?
+
     df_no_show = df.query('no_show == "Yes"')
     df_show = df.query('no_show == "No"')
 
@@ -183,6 +193,9 @@ def explore_neighbourhoods(df):
     plt.show()
 
 def explore_age_groups(df):
+
+    # Q3. How do different age groups perform in fulfilling medical appointments?
+
     # Let's try and see no-shows by age groups
 
     df['age'].describe()
@@ -252,6 +265,8 @@ def explore_age_groups(df):
     plt.legend();
     plt.show()
 
+    # Looks like Young Adults had maximum no-shows while Seniors had the least
+
 if __name__ == '__main__':
     df = load_data('noshowappointments-kagglev2-may-2016.csv')
     assess_data(df)
@@ -259,3 +274,21 @@ if __name__ == '__main__':
     explore_gender(df)
     explore_neighbourhoods(df)
     explore_age_groups(df)
+
+    """ Conclusions
+
+    About 80% of the people of both genders showed-up for their appointments whereas about 20% didn't.
+
+    Neighbourhoods with the highest proportions of no-shows are:
+
+    (a) Ilhas Oceanicas de Trindade
+
+    (b) Santos Dumont
+
+    (c) Santa Cecilia
+
+    (d) Santa Clara
+
+    (e) Itarare
+
+    Young Adults had maximum no-shows while Seniors had the least """
