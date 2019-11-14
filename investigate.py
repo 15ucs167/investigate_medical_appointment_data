@@ -1,4 +1,5 @@
-"""In this project, I'm investigating a dataset that contains around 100,000 records of medical appointments in Brazil. The dataset has 'No-show' as the dependent variable which tells whether a patient fulfilled his/her appointment or not.
+"""In this project, I'm investigating a dataset that contains around 100,000 records of medical appointments in Brazil.
+The dataset has 'No-show' as the dependent variable which tells whether a patient fulfilled his/her appointment or not.
 
 I'm interested in exploring:
 Q1. How do the different genders fair when it comes to fulfilling appointments?
